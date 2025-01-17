@@ -47,7 +47,7 @@ class BoostPosixTimeDuration:
                 rt = "0"
             if neg:
                 rt = "-" + rt
-        return '(%s) %s' % (self.typename, rt.strip())
+        return '%s (%s)' % (rt.strip(), self.typename)
 
 @add_printer
 class BoostGregorianDate:
@@ -71,7 +71,7 @@ class BoostGregorianDate:
 
         # Check for uninitialized case
         if n == 2**date_int_type_bits - 2:
-            return '(%s) uninitialized' % self.typename
+            return 'uninitialized (%s)' % self.typename
         # Convert date number to year-month-day
         a = n + 32044
         b = (4 * a + 3) // 146097
@@ -82,7 +82,7 @@ class BoostGregorianDate:
         day = e + 1 - (153 * m + 2) // 5
         month = m + 3 - 12 * (m // 10)
         year = 100 * b + d - 4800 + (m // 10)
-        return '(%s) %4d-%02d-%02d' % (self.typename, year, month, day)
+        return '%4d-%02d-%02d (%s)' % (year, month, day, self.typename)
 
 
 @add_printer
@@ -101,14 +101,14 @@ class BoostPosixTimePTime:
         n = int(self.value['time_']['time_count_']['value_'])
         # Check for uninitialized case
         if n == 2**63 - 2:
-            return '(%s) uninitialized' % self.typename
+            return 'uninitialized (%s)' % self.typename
         # Check for boost::posix_time::pos_infin case
         if n == 2**63 - 1:
-            return '(%s) positive infinity' % self.typename
+            return 'positive infinity (%s)' % self.typename
         # Check for boost::posix_time::neg_infin case
         if n == -2**63:
-            return '(%s) negative infinity' % self.typename
+            return 'negative infinity (%s)' % self.typename
         # Subtract the unix epoch from the timestamp and convert the resulting timestamp into something human readable
         unix_epoch_time = (n - 210866803200000000) / 1000000.0
         time_string = datetime.datetime.utcfromtimestamp(unix_epoch_time).isoformat(' ')
-        return '(%s) %sZ' % (self.typename, time_string)
+        return '%sZ (%s)' % (time_string, self.typename)

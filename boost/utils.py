@@ -594,13 +594,18 @@ class Printer_Gen(object):
             self.no_template_name_list.append(p)
 
     def __call__(self, value):
-        v = GDB_Value_Wrapper(value)
-        subprinter_generators = self.template_name_dict.get(v.template_name, self.no_template_name_list)
-        for subprinter_gen in subprinter_generators:
-            printer = subprinter_gen(v)
-            if printer is not None:
-                return printer
+        try:
+            v = GDB_Value_Wrapper(value)
+            subprinter_generators = self.template_name_dict.get(v.template_name, self.no_template_name_list)
+            for subprinter_gen in subprinter_generators:
+                printer = subprinter_gen(v)
+                if printer is not None:
+                    return printer
+        except:
+            pass
+        
         return None
+        
 
 
 class Type_Printer_Gen:
